@@ -1,6 +1,6 @@
-import type { NextPage } from 'next';
+import type { NextPage } from "next";
 import dynamic from "next/dynamic";
-import Head from 'next/head';
+import Head from "next/head";
 const Modal = dynamic(() => import("../components/Modal"), { ssr: false });
 
 const Home: NextPage = () => {
@@ -16,6 +16,6 @@ const Home: NextPage = () => {
       </main>
     </div>
   );
-}
+};
 
-export default Home
+export default Home;

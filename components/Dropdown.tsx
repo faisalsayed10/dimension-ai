@@ -5,13 +5,19 @@ import { Fragment, useEffect, useRef, useState } from "react";
 interface Props {
   placeholder?: string;
   options: { name: string; icon: JSX.Element; default?: string }[];
+  selectedIndex?: number;
+  setSelectedIndex?: (index: number) => void;
 }
 
-const Dropdown: React.FC<Props> = ({ options, placeholder }) => {
+const Dropdown: React.FC<Props> = ({ options, placeholder, selectedIndex, setSelectedIndex }) => {
   const searchRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
-  const [selected, setSelected] = useState(options[0]);
+  const [selected, setSelected] = useState(options[selectedIndex || 0]);
   const [filtered, setFiltered] = useState(options);
+
+  useEffect(() => {
+    setSelected(options[selectedIndex || 0]);
+  }, [selectedIndex]);
 
   useEffect(() => {
     setFiltered(
@@ -58,6 +64,7 @@ const Dropdown: React.FC<Props> = ({ options, placeholder }) => {
                   <button
                     onClick={() => {
                       setSelected(option);
+                      setSelectedIndex && setSelectedIndex(options.indexOf(option));
                       setTimeout(() => setValue(""), 200);
                     }}
                     className={`${

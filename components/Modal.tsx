@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
+import { useManager } from "../lib/ManagerContext";
 import DatePicker from "./DatePicker";
 import Dropdown from "./Dropdown";
 import Editor, { Toolbar } from "./Editor";
@@ -10,17 +11,105 @@ import SubmitArrowIcon from "./icons/SubmitArrowIcon";
 import TagIcon from "./icons/TagIcon";
 import TodoIcon from "./icons/TodoIcon";
 import MultiDropdown from "./MultiDropdown";
+import debounce from "lodash.debounce";
+import SparkleIcon from "./icons/SparkleIcon";
+import AITagIcon from "./icons/AITagIcon";
+
+const transitionProps = {
+  as: Fragment,
+  enter: "transition ease-out duration-200",
+  enterFrom: "transform opacity-0 scale-50",
+  enterTo: "transform opacity-100 scale-100",
+  leave: "transition ease-in duration-75",
+  leaveFrom: "transform opacity-100 scale-100",
+  leaveTo: "transform opacity-0 scale-95",
+};
+
+const assignees = [
+  { name: "Faisal S", icon: <AssigneeIcon />, selected: false },
+  { name: "Tejas R", icon: <AssigneeIcon />, selected: false },
+  { name: "Aiden B", icon: <AssigneeIcon />, selected: false },
+  { name: "Conrad C", icon: <AssigneeIcon />, selected: false },
+];
+
+const tags = [
+  { name: "Bug", icon: <TagIcon />, selected: false },
+  { name: "Feature", icon: <TagIcon />, selected: false },
+  { name: "Issue", icon: <TagIcon />, selected: false },
+  { name: "Enhancement", icon: <TagIcon />, selected: false },
+  { name: "Cloud", icon: <TagIcon />, selected: false },
+  { name: "Performance", icon: <TagIcon />, selected: false },
+];
+
+const projects = [
+  { name: "No project", icon: <ProjectIcon />, default: "Project" },
+  { name: "Dimension", icon: <ProjectIcon /> },
+  { name: "React", icon: <ProjectIcon /> },
+  { name: "Flutter", icon: <ProjectIcon /> },
+  { name: "Discord", icon: <ProjectIcon /> },
+  { name: "Firefiles", icon: <ProjectIcon /> },
+];
 
 const Modal: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
+  const [title, setTitle] = useState("");
   const titleRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const { state } = useManager();
+
+  const [prevTitle, setPrevTitle] = useState("");
+  const [prevDesc, setPrevDesc] = useState("");
+  const [aiProject, setAiProject] = useState("");
+  const [aiTag, setAiTag] = useState("");
+  const [projectSelectedIndex, setProjectSelectedIndex] = useState(0);
 
   useEffect(() => {
     setOpen(true);
     titleRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+    if (prevTitle !== title || prevDesc !== state.doc.toString()) {
+      fetchAISuggestions();
+    }
+
+    return () => {
+      fetchAISuggestions.cancel();
+    };
+  }, [title, state]);
+
+  const fetchAISuggestions = debounce(async () => {
+    setPrevTitle(title);
+    setPrevDesc(state.doc.toString());
+
+    const description = state.doc.toString();
+    const textDesc = state.doc.textContent;
+    if (title.trim() === "" || textDesc.trim() === "") return;
+
+    console.log("Fetching AI suggestions...");
+
+    const res = await fetch("/api/ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        description,
+        projects: projects.filter((p, i) => i !== 0),
+        tags,
+      }),
+    });
+
+    const { data } = await res.json();
+    console.log(data);
+
+    const [project, tag] = data.split("\n");
+    const [_, projectValue] = project.split(": ");
+    const [__, tagValue] = tag.split(": ");
+
+    setAiProject(projectValue);
+    setAiTag(tagValue);
+  }, 3000);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -94,9 +183,42 @@ const Modal: React.FC = () => {
                     placeholder="Task title"
                     type="text"
                     ref={titleRef}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                   />
                   <div className="mb-6">
                     <Editor />
+                  </div>
+                  <div className="mb-3 flex items-center gap-2 text-xs text-gray-400">
+                    {(aiProject || aiTag) && <SparkleIcon className="ml-2" />}
+                    <Transition show={aiProject ? true : false} {...transitionProps}>
+                      <button
+                        onClick={() => {
+                          const index = projects.findIndex((p) => p.name === aiProject);
+                          setProjectSelectedIndex(index);
+                          setAiProject("");
+                        }}
+                        className="border border-dashed border-gray-300 rounded-lg py-2 px-3 flex items-center gap-2"
+                      >
+                        <ProjectIcon />
+                        <p>{aiProject}</p>
+                      </button>
+                    </Transition>
+                    <Transition {...transitionProps} show={aiTag ? true : false}>
+                      <button
+                        onClick={() => {
+                          tags.map((t) => {
+                            if (t.name === aiTag) t.selected = true;
+                            return t;
+                          });
+                          setAiTag("");
+                        }}
+                        className="border border-dashed border-gray-300 rounded-lg py-2 px-3 flex items-center gap-2"
+                      >
+                        <AITagIcon />
+                        <p>{aiTag}</p>
+                      </button>
+                    </Transition>
                   </div>
                   <div className="flex items-center gap-2 ml-2">
                     <Dropdown
@@ -110,12 +232,7 @@ const Modal: React.FC = () => {
                     />
                     <MultiDropdown
                       placeholder="Assign to..."
-                      options={[
-                        { name: "Faisal S", icon: <AssigneeIcon />, selected: false },
-                        { name: "Tejas R", icon: <AssigneeIcon />, selected: false },
-                        { name: "Aiden B", icon: <AssigneeIcon />, selected: false },
-                        { name: "Conrad C", icon: <AssigneeIcon />, selected: false },
-                      ]}
+                      options={assignees}
                       text="Assignee"
                       icon={<AssigneeIcon />}
                     />
@@ -131,23 +248,15 @@ const Modal: React.FC = () => {
                     />
                     <MultiDropdown
                       placeholder="Assign tags..."
-                      options={[
-                        { name: "Bug", icon: <TagIcon />, selected: false },
-                        { name: "Feature", icon: <TagIcon />, selected: false },
-                        { name: "Issue", icon: <TagIcon />, selected: false },
-                        { name: "Enhancement", icon: <TagIcon />, selected: false },
-                      ]}
+                      options={tags}
                       text="Tags"
                       icon={<TagIcon />}
                     />
                     <Dropdown
                       placeholder="Choose project..."
-                      options={[
-                        { name: "No project", icon: <ProjectIcon />, default: "Project" },
-                        { name: "Project 1", icon: <ProjectIcon /> },
-                        { name: "Project 2", icon: <ProjectIcon /> },
-                        { name: "Project 3", icon: <ProjectIcon /> },
-                      ]}
+                      options={projects}
+                      selectedIndex={projectSelectedIndex}
+                      setSelectedIndex={setProjectSelectedIndex}
                     />
                     <div className="flex relative items-center gap-2 px-3 py-1 rounded-md border">
                       <DatePicker startDate={startDate} setStartDate={setStartDate} />

@@ -17,7 +17,9 @@
     "@remirror/react": "^2.0.25",
     "@remirror/react-editors": "^1.0.25",
     "emoji-mart": "^5.5.2",
+    "lodash.debounce": "^4.0.8",
     "next": "latest",
+    "openai": "^3.2.1",
     "react": "18.2.0",
     "react-datepicker": "^4.10.0",
     "react-dom": "18.2.0",
@@ -25,6 +27,7 @@
     "tinykeys": "^1.4.0"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.7",
     "@types/node": "18.11.3",
     "@types/react": "18.0.21",
     "@types/react-datepicker": "^4.10.0",

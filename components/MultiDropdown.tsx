@@ -12,12 +12,12 @@ interface Props {
 const MultiDropdown: React.FC<Props> = ({ options, placeholder, text, icon }) => {
   const searchRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
-  // const [selected, setSelected] = useState(options[0]);
-  const [filtered, setFiltered] = useState(options);
+  const [allOptions, setAllOptions] = useState(options);
+  const [filtered, setFiltered] = useState(allOptions);
 
   useEffect(() => {
     setFiltered(
-      options.filter((option) => option.name.toLowerCase().includes(value.toLowerCase()))
+      allOptions.filter((option) => option.name.toLowerCase().includes(value.toLowerCase()))
     );
   }, [value]);
 
@@ -28,7 +28,10 @@ const MultiDropdown: React.FC<Props> = ({ options, placeholder, text, icon }) =>
         className="inline-flex items-center justify-center gap-2 text-gray-400 rounded-lg border px-3 py-[5px] text-sm"
       >
         {icon}
-        {text}
+        {text + " "}
+        {allOptions.filter((option) => option.selected).length > 0
+          ? `(${allOptions.filter((option) => option.selected).length})`
+          : ""}
       </Menu.Button>
       <Transition
         as={Fragment}
@@ -61,6 +64,7 @@ const MultiDropdown: React.FC<Props> = ({ options, placeholder, text, icon }) =>
                     onClick={(e) => {
                       e.preventDefault();
                       option.selected = !option.selected;
+                      setAllOptions([...options]);
                       setValue("");
                     }}
                     className={`${

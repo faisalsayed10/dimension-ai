@@ -25,7 +25,7 @@ const MultiDropdown: React.FC<Props> = ({ options, placeholder, text, icon }) =>
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button
         onClick={() => setTimeout(() => searchRef.current?.focus(), 100)}
-        className="inline-flex items-center justify-center gap-2 text-gray-400 rounded-lg border px-3 py-[5px] text-sm"
+        className="inline-flex items-center justify-center gap-2 text-gray-400 rounded-lg border px-3 py-[5px] text-sm focus:outline-none"
       >
         {icon}
         {text + " "}
@@ -42,7 +42,7 @@ const MultiDropdown: React.FC<Props> = ({ options, placeholder, text, icon }) =>
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute mt-2 w-56 origin-top-right divide-y z-50 divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+        <Menu.Items className="absolute mt-2 w-56 origin-top-right focus:outline-none divide-y z-50 divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
           <div className="px-1 py-1">
             <input
               type="text"

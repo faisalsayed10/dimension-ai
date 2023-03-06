@@ -67,7 +67,7 @@ export const Toolbar: React.FC = forwardRef((_, ref) => {
     <ThemeProvider>
       <Remirror state={state} manager={manager} onChange={(p) => setState(p.state)}>
         <RemirrorToolbar>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             <FileUploadButton />
             <MentionIcon className={iconClass} />
             <EmojiIcon className={iconClass} onClick={() => setShowPicker(!showPicker)} />

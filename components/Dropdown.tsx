@@ -7,9 +7,10 @@ interface Props {
   options: { name: string; icon: JSX.Element; default?: string }[];
   selectedIndex?: number;
   setSelectedIndex?: (index: number) => void;
+  id?: string;
 }
 
-const Dropdown: React.FC<Props> = ({ options, placeholder, selectedIndex, setSelectedIndex }) => {
+const Dropdown: React.FC<Props> = ({ options, placeholder, selectedIndex, setSelectedIndex, id }) => {
   const searchRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
   const [selected, setSelected] = useState(options[selectedIndex || 0]);
@@ -28,8 +29,9 @@ const Dropdown: React.FC<Props> = ({ options, placeholder, selectedIndex, setSel
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button
+        id={id}
         onClick={() => setTimeout(() => searchRef.current?.focus(), 100)}
-        className="inline-flex items-center justify-center gap-2 text-gray-400 rounded-lg border px-3 py-[5px] text-sm"
+        className="inline-flex items-center justify-center gap-2 text-gray-400 rounded-lg border px-3 py-[5px] text-sm focus:outline-none"
       >
         {selected.icon}
         {selected?.default || selected.name}
@@ -43,7 +45,7 @@ const Dropdown: React.FC<Props> = ({ options, placeholder, selectedIndex, setSel
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute mt-2 w-56 origin-top-right divide-y z-50 divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+        <Menu.Items className="absolute mt-2 w-56 focus:outline-none origin-top-right divide-y z-50 divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
           <div className="px-1 py-1">
             <input
               type="text"
@@ -57,7 +59,7 @@ const Dropdown: React.FC<Props> = ({ options, placeholder, selectedIndex, setSel
               className="px-2 py-1 m-0 border-none appearance-none h-9 bg-transparent placeholder:text-gray-400 text-gray-500 outline-none text-sm"
             />
           </div>
-          <div className="px-1 py-1">
+          <div className="px-1 py-1 max-h-[200px] overflow-y-auto">
             {filtered.map((option) => (
               <Menu.Item key={option.name}>
                 {({ active }) => (

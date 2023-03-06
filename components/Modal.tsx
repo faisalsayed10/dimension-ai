@@ -14,6 +14,7 @@ import MultiDropdown from "./MultiDropdown";
 import debounce from "lodash.debounce";
 import SparkleIcon from "./icons/SparkleIcon";
 import AITagIcon from "./icons/AITagIcon";
+import tinykeys from "tinykeys";
 
 const transitionProps = {
   as: Fragment,
@@ -43,11 +44,14 @@ const tags = [
 
 const projects = [
   { name: "No project", icon: <ProjectIcon />, default: "Project" },
-  { name: "Dimension", icon: <ProjectIcon /> },
-  { name: "React", icon: <ProjectIcon /> },
-  { name: "Flutter", icon: <ProjectIcon /> },
-  { name: "Discord", icon: <ProjectIcon /> },
-  { name: "Firefiles", icon: <ProjectIcon /> },
+  { name: "Code Explorer", icon: <ProjectIcon /> },
+  { name: "CLI", icon: <ProjectIcon /> },
+  { name: "Deployment Platform", icon: <ProjectIcon /> },
+  { name: "Domain Management", icon: <ProjectIcon /> },
+  { name: "Integration", icon: <ProjectIcon /> },
+  { name: "Notification System", icon: <ProjectIcon /> },
+  { name: "Chat", icon: <ProjectIcon /> },
+  { name: "Project Management", icon: <ProjectIcon /> },
 ];
 
 const Modal: React.FC = () => {
@@ -65,10 +69,33 @@ const Modal: React.FC = () => {
   const [projectSelectedIndex, setProjectSelectedIndex] = useState(0);
 
   useEffect(() => {
-    setTimeout(() => {
+    const unsub = tinykeys(window, {
+      "s": () => {
+        console.log("s key pressed");
+        const activeElement = document.activeElement;
+
+        const inTextInput =
+          activeElement instanceof HTMLInputElement ||
+          (activeElement instanceof HTMLDivElement && activeElement.contentEditable === "true");
+        if (inTextInput) return;
+
+        const todoButton = document.querySelector("#todo-dropdown");
+        if (todoButton) {
+          // @ts-ignore
+          todoButton.click();
+        }
+      },
+    });
+
+    const unsubTimeout = setTimeout(() => {
       setOpen(true);
       titleRef.current?.focus();
     }, 200);
+
+    return () => {
+      unsub();
+      clearTimeout(unsubTimeout);
+    };
   }, []);
 
   useEffect(() => {
@@ -200,7 +227,7 @@ const Modal: React.FC = () => {
                           setProjectSelectedIndex(index);
                           setAiProject("");
                         }}
-                        className="border border-dashed border-gray-300 rounded-lg py-2 px-3 flex items-center gap-2"
+                        className="border focus:outline-none border-dashed border-gray-300 rounded-lg py-2 px-3 flex items-center gap-2"
                       >
                         <ProjectIcon />
                         <p>{aiProject}</p>
@@ -219,7 +246,7 @@ const Modal: React.FC = () => {
                           });
                           setAiTag("");
                         }}
-                        className="border border-dashed border-gray-300 rounded-lg py-2 px-3 flex items-center gap-2"
+                        className="border border-dashed focus:outline-none border-gray-300 rounded-lg py-2 px-3 flex items-center gap-2"
                       >
                         <AITagIcon />
                         <p>{aiTag}</p>
@@ -228,6 +255,7 @@ const Modal: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-2 ml-2">
                     <Dropdown
+                      id="todo-dropdown"
                       placeholder="Change status..."
                       options={[
                         { name: "Todo", icon: <TodoIcon /> },
@@ -286,7 +314,7 @@ const Modal: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="border-t px-4 py-3 sm:flex sm:flex-row justify-between sm:px-6 relative">
+                <div className="border-t px-4 py-4 sm:flex sm:flex-row justify-between sm:px-6 relative">
                   <Toolbar />
                   <button
                     ref={buttonRef}

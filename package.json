@@ -6,18 +6,23 @@
     "start": "next start"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.1.2",
+    "@emoji-mart/react": "^1.1.1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
+    "@remirror/extension-file": "^1.0.15",
     "@remirror/pm": "^2.0.3",
     "@remirror/react": "^2.0.25",
     "@remirror/react-editors": "^1.0.25",
+    "emoji-mart": "^5.5.2",
     "next": "latest",
     "react": "18.2.0",
     "react-datepicker": "^4.10.0",
     "react-dom": "18.2.0",
-    "remirror": "^2.0.24"
+    "remirror": "^2.0.24",
+    "tinykeys": "^1.4.0"
   },
   "devDependencies": {
     "@types/node": "18.11.3",

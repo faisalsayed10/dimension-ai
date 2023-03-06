@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { ManagerProvider } from "../lib/ManagerContext";
 const Modal = dynamic(() => import("../components/Modal"), { ssr: false });
 
 const Home: NextPage = () => {
@@ -11,9 +12,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <Modal />
-      </main>
+      <ManagerProvider>
+        <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
+          <Modal />
+        </main>
+      </ManagerProvider>
     </div>
   );
 };

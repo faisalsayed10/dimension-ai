@@ -1,23 +1,12 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { PlaceholderExtension, useRemirror } from "@remirror/react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import {
-  BoldExtension,
-  BulletListExtension,
-  CodeExtension,
-  EmojiExtension,
-  HeadingExtension,
-  ItalicExtension,
-  LinkExtension,
-  OrderedListExtension,
-  TaskListExtension,
-} from "remirror/extensions";
 import DatePicker from "./DatePicker";
 import Dropdown from "./Dropdown";
 import Editor, { Toolbar } from "./Editor";
 import AssigneeIcon from "./icons/AssigneeIcon";
 import PriorityIcon from "./icons/PriorityIcon";
 import ProjectIcon from "./icons/ProjectIcon";
+import SubmitArrowIcon from "./icons/SubmitArrowIcon";
 import TagIcon from "./icons/TagIcon";
 import TodoIcon from "./icons/TodoIcon";
 import MultiDropdown from "./MultiDropdown";
@@ -26,21 +15,7 @@ const Modal: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const titleRef = useRef<HTMLInputElement>(null);
-
-  const { manager } = useRemirror({
-    extensions: () => [
-      new PlaceholderExtension({ placeholder: "Describe this task" }),
-      new BoldExtension(),
-      new HeadingExtension(),
-      new ItalicExtension(),
-      new CodeExtension(),
-      new LinkExtension(),
-      new TaskListExtension(),
-      new BulletListExtension(),
-      new OrderedListExtension(),
-      new EmojiExtension(),
-    ],
-  });
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setOpen(true);
@@ -121,7 +96,7 @@ const Modal: React.FC = () => {
                     ref={titleRef}
                   />
                   <div className="mb-6">
-                    <Editor manager={manager} />
+                    <Editor />
                   </div>
                   <div className="flex items-center gap-2 ml-2">
                     <Dropdown
@@ -196,13 +171,16 @@ const Modal: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="border-t px-4 py-3 sm:flex sm:flex-row justify-between sm:px-6">
-                  <Toolbar manager={manager} />
+                <div className="border-t px-4 py-3 sm:flex sm:flex-row justify-between sm:px-6 relative">
+                  <Toolbar />
                   <button
+                    ref={buttonRef}
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    className="create relative inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 hover:bg-indigo-500 px-4 py-[6px] text-sm font-medium text-white sm:w-auto"
                   >
                     Create
+                    <div className="h-full w-[1px] bg-white opacity-20 mx-3" />
+                    <SubmitArrowIcon />
                   </button>
                 </div>
               </Dialog.Panel>

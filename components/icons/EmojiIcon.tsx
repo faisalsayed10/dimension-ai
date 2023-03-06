@@ -1,10 +1,11 @@
 interface Props {
   className?: string;
+  onClick?: () => void;
 }
 
-const EmojiIcon: React.FC<Props> = ({ className }) => {
+const EmojiIcon: React.FC<Props> = ({ className, onClick }) => {
   return (
-    <div className={className}>
+    <div className={className} onClick={onClick}>
       <svg
         width="18"
         height="18"

@@ -43,3 +43,17 @@ ol {
   padding-left: 2rem !important;
   list-style: decimal !important;
 }
+
+.create {
+  box-shadow: 0px 3px 0px #3F2ABD;
+}
+
+.create:active {
+  box-shadow: 0px 1px 0px #3F2ABD;
+  scale: 0.95;
+}
+
+a {
+  color: #3F2ABD;
+  text-decoration: underline;
+}

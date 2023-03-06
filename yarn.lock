@@ -51,6 +51,16 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
+"@emoji-mart/data@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@emoji-mart/data/-/data-1.1.2.tgz#777c976f8f143df47cbb23a7077c9ca9fe5fc513"
+  integrity sha512-1HP8BxD2azjqWJvxIaWAMyTySeZY0Osr83ukYjltPVkNXeJvTz7yDrPLBtnrD5uqJ3tg4CcLuuBW09wahqL/fg==
+
+"@emoji-mart/react@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@emoji-mart/react/-/react-1.1.1.tgz#ddad52f93a25baf31c5383c3e7e4c6e05554312a"
+  integrity sha512-NMlFNeWgv1//uPsvLxvGQoIerPuVdXwK/EUek8OOkJ6wVOWPUizRBJU0hDqWZCOROVpfBgCemaC3m6jDOXi03g==
+
 "@emotion/babel-plugin@^11.10.6":
   version "11.10.6"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.10.6.tgz#a68ee4b019d661d6f37dec4b8903255766925ead"
@@ -675,6 +685,18 @@
     "@babel/runtime" "^7.13.10"
     "@remirror/core" "^2.0.11"
     "@remirror/messages" "^2.0.2"
+
+"@remirror/extension-file@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@remirror/extension-file/-/extension-file-1.0.15.tgz#3105fcd737e363170f0aa0fe79b561cca905c16c"
+  integrity sha512-o7ZMyTBvG4dxvPqVLlOPevJWK9IKaCkuHoCyxUVSalKHd3skE2/tBd+UFuGUSRj8SP4VGpxc55sW2YRMEd5GLw==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@remirror/core" "^2.0.11"
+    "@remirror/extension-react-component" "^2.0.11"
+    "@remirror/react-core" "^2.0.15"
+    "@remirror/theme" "^2.0.5"
+    nanoevents "^5.1.13"
 
 "@remirror/extension-find@^0.1.4":
   version "0.1.4"
@@ -1894,6 +1916,11 @@ electron-to-chromium@^1.4.284:
   version "1.4.317"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.317.tgz#9a3d38a1a37f26a417d3d95dafe198ff11ed072b"
   integrity sha512-JhCRm9v30FMNzQSsjl4kXaygU+qHBD0Yh7mKxyjmF0V8VwYVB6qpBRX28GyAucrM9wDCpSUctT6FpMUQxbyKuA==
+
+emoji-mart@^5.5.2:
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-5.5.2.tgz#3ddbaf053139cf4aa217650078bc1c50ca8381af"
+  integrity sha512-Sqc/nso4cjxhOwWJsp9xkVm8OF5c+mJLZJFoFfzRuKO+yWiN7K8c96xmtughYb0d/fZ8UC6cLIQ/p4BR6Pv3/A==
 
 emojibase-data@^6.1.0:
   version "6.2.0"
@@ -3517,6 +3544,11 @@ tinycolor2@^1.4.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.6.0.tgz#f98007460169b0263b97072c5ae92484ce02d09e"
   integrity sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==
+
+tinykeys@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/tinykeys/-/tinykeys-1.4.0.tgz#c2986cd0184c86e943a6b17acc0352e42b542dff"
+  integrity sha512-ysnVd2E4nWbNXIbHaUidcKGLTmNimqP0hdpsD0Ph5hPJ84ntCF6PHj+Jg3im9nZt9/hNsBg/E6m1psHc2KaPnQ==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"

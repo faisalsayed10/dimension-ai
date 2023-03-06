@@ -1,10 +1,11 @@
 interface Props {
   className?: string;
+  onClick?: () => void;
 }
 
-const AttachmentIcon: React.FC<Props> = ({ className }) => {
+const AttachmentIcon: React.FC<Props> = ({ className, onClick }) => {
   return (
-    <div className={className}>
+    <div className={className} onClick={onClick}>
       <svg
         width="15"
         height="16"

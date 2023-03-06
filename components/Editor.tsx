@@ -1,3 +1,5 @@
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 import {
   EditorComponent,
   Remirror,
@@ -9,10 +11,14 @@ import {
   ToggleItalicButton,
   ToggleOrderedListButton,
   ToggleTaskListButton,
-  Toolbar as RemirrorToolbar
+  Toolbar as RemirrorToolbar,
 } from "@remirror/react";
 import { AllStyledComponent } from "@remirror/styles/emotion";
-import AttachmentIcon from "./icons/AttachmentIcon";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { htmlToProsemirrorNode } from "remirror";
+import { useManager } from "../lib/ManagerContext";
+import CreateLinkButton from "./CreateLinkButton";
+import FileUploadButton from "./FileUploadButton";
 import BoldIcon from "./icons/BoldIcon";
 import BulletedListIcon from "./icons/BulletedListIcon";
 import CodeIcon from "./icons/CodeIcon";
@@ -24,13 +30,12 @@ import MentionIcon from "./icons/MentionIcon";
 import OrderedListIcon from "./icons/OrderedListIcon";
 import TodoListIcon from "./icons/TodoListIcon";
 
-interface Props {
-  manager: any;
-}
-
 const iconClass = "outline-none border-none m-0 p-2 hover:bg-transparent cursor-pointer";
 
-const Editor: React.FC<Props> = ({ manager }) => {
+const Editor: React.FC = forwardRef((_, ref) => {
+  const { manager, getContext } = useManager();
+  useImperativeHandle(ref, () => getContext(), [getContext]);
+
   return (
     <AllStyledComponent>
       <ThemeProvider>
@@ -40,22 +45,63 @@ const Editor: React.FC<Props> = ({ manager }) => {
       </ThemeProvider>
     </AllStyledComponent>
   );
-};
+});
 
-export const Toolbar: React.FC<Props> = ({ manager }) => {
+export const Toolbar: React.FC = forwardRef((_, ref) => {
+  const [showPicker, setShowPicker] = useState(false);
+  const { manager, state, setState, getContext } = useManager();
+  useImperativeHandle(ref, () => getContext(), [getContext]);
+
+  useEffect(() => {
+    // Removes the duplicate file that is getting uploaded
+    document.querySelectorAll(".file-node-view-wrapper").forEach((wrapper) => {
+      const children = wrapper.children;
+      if (children.length > 1) {
+        const child = children[0];
+        child.classList.add("hidden");
+      }
+    });
+  }, [state]);
+
   return (
     <ThemeProvider>
-      <Remirror manager={manager}>
+      <Remirror state={state} manager={manager} onChange={(p) => setState(p.state)}>
         <RemirrorToolbar>
           <div className="flex items-center gap-2">
-            <AttachmentIcon className={iconClass} />
+            <FileUploadButton />
             <MentionIcon className={iconClass} />
-            <EmojiIcon className={iconClass} />
+            <EmojiIcon className={iconClass} onClick={() => setShowPicker(!showPicker)} />
+            {showPicker && (
+              <div className="absolute top-10 z-50">
+                <Picker
+                  theme="light"
+                  data={data}
+                  onEmojiSelect={(e: any) => {
+                    const { tr } = state;
+                    tr.insertText(e.native, state.selection.from, state.selection.to);
+                    setState(state.apply(tr));
+                    setShowPicker(false);
+                  }}
+                  onClickOutside={() => setShowPicker(false)}
+                />
+              </div>
+            )}
             <ToggleHeadingButton className={iconClass} icon={<HeadingIcon />} />
             <ToggleBoldButton className={iconClass} icon={<BoldIcon />} />
             <ToggleItalicButton className={iconClass} icon={<ItalicIcon />} />
             <ToggleCodeButton className={iconClass} icon={<CodeIcon />} />
-            <LinkIcon className={iconClass} />
+            <CreateLinkButton
+              onLinkCreate={(text, url) => {
+                const { tr } = state;
+                const link = htmlToProsemirrorNode({
+                  content: `<a href="${url}">${text}</a>`,
+                  schema: state.schema,
+                });
+
+                tr.insert(state.selection.from, link);
+                setState(state.apply(tr));
+              }}
+            />
             <ToggleOrderedListButton className={iconClass} icon={<OrderedListIcon />} />
             <ToggleBulletListButton className={iconClass} icon={<BulletedListIcon />} />
             <ToggleTaskListButton className={iconClass} icon={<TodoListIcon />} />
@@ -64,6 +110,6 @@ export const Toolbar: React.FC<Props> = ({ manager }) => {
       </Remirror>
     </ThemeProvider>
   );
-};
+});
 
 export default Editor;

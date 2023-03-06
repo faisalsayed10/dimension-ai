@@ -65,8 +65,10 @@ const Modal: React.FC = () => {
   const [projectSelectedIndex, setProjectSelectedIndex] = useState(0);
 
   useEffect(() => {
-    setOpen(true);
-    titleRef.current?.focus();
+    setTimeout(() => {
+      setOpen(true);
+      titleRef.current?.focus();
+    }, 200);
   }, []);
 
   useEffect(() => {

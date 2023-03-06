@@ -21,7 +21,7 @@ Tags: ${tags.map((t: any) => t.name).join(", ")}.
 
 From the above array of options, the most suitable project and the most suitable tag for this task is:`;
 
-  const system = `You are a language model designed to help the user choose the appropriate projects and tags for the tasks that they create. Do not respond in sentences, respond only with what is required and keep it short and concise.
+  const system = `You are a language model designed to help the user choose the appropriate projects and tags for the tasks that they create. Do not respond in sentences, respond only with what is required and keep it short and concise. You may select only one project name whatsoever, however you're allowed to select multiple tags.
 
 The ideal response format should be:
 

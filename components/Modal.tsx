@@ -208,7 +208,11 @@ const Modal: React.FC = () => {
                       <button
                         onClick={() => {
                           tags.map((t) => {
-                            if (t.name === aiTag) t.selected = true;
+                            const list = aiTag.split(", ");
+                            list.forEach((l) => {
+                              if (t.name === l) t.selected = true;
+                            });
+
                             return t;
                           });
                           setAiTag("");
